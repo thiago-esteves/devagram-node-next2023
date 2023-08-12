@@ -1,6 +1,7 @@
 import type {NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
 import mongoose from 'mongoose';
 import type{RespostaPadraoMsg} from '../types/RespostaPadraoMsg';
+import endpointCadastro from '@/pages/api/cadastro';
 
 
 
@@ -26,4 +27,3 @@ export const conectarMongoDb = (handler: NextApiHandler) => {
         return handler(req, res);
     }
 }
-    

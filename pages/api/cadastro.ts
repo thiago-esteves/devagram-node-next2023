@@ -2,6 +2,7 @@ import type { NextApiRequest,NextApiResponse } from "next";
 import type { RespostaPadraoMsg } from "../../types/RespostaPadraoMsg";
 import type { CadastroRequisicao } from "../../types/CadastroRequisicao";
 import  { UsuarioModel } from "../../models/UsuarioModel";
+import { conectarMongoDb } from "../../middlewares/conectarMongoDB";
 
 const endpointCadastro = 
    async (req :NextApiRequest, res:NextApiResponse<RespostaPadraoMsg>)=>{
@@ -29,5 +30,4 @@ const endpointCadastro =
       return res.status(405).json({erro:'Metodo informado nao e valido'});
 
 }
-
-export default endpointCadastro;
+export default conectarMongoDb(endpointCadastro);
