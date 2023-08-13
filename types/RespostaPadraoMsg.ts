@@ -1,4 +1,4 @@
 export type RespostaPadraoMsg ={
-    msg? :String,
+    msg? :string,
     erro?:String
 }

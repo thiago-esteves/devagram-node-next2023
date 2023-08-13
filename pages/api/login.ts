@@ -2,24 +2,40 @@
 import type {NextApiRequest, NextApiResponse} from 'next';
 import {conectarMongoDb} from '../../middlewares/conectarMongoDB';
 import type { RespostaPadraoMsg } from '../../types/RespostaPadraoMsg';
+import type {loginResposta} from '../../types/LoginResposta';
+import md5 from 'md5';
+import { UsuarioModel } from '../../models/UsuarioModel';
+import jwt from 'jsonwebtoken';
 
-const endpointLogin = (
+const endpointLogin = async(
      req : NextApiRequest,
-     res : NextApiResponse<RespostaPadraoMsg>
+     res : NextApiResponse<RespostaPadraoMsg |loginResposta>
 
 ) =>  {
+         const {MINHA_CHAVE_JWT} = process.env;
+         if(!MINHA_CHAVE_JWT){
+            return res.status(500).json({erro:'Env JWT nao informado'});
+         }
+
       if(req.method === 'POST'){
         const {login, senha} = req.body;
+        
+        const usuariosEncontrados = await UsuarioModel.find({email:login, senha: md5(senha)})
+        if(usuariosEncontrados && usuariosEncontrados.length > 0){
+          const usuarioEncontrado = usuariosEncontrados[0];
 
-        if(login === 'admin@admin.com' &&
-            senha ==='Admin@123'){ 
-            return res.status(200).json({msg:'Usuario autenticado com sucesso'});
+          const token = jwt.sign({_id: usuarioEncontrado._id}, MINHA_CHAVE_JWT);
 
-            }
-            return res.status (405).json({erro: 'Usuario o senha nao encontrado'});
+          return res.status(200).json({
+            nome: usuarioEncontrado.nome,
+            email: usuarioEncontrado.email,
+           token});
 
         }
-        return res.status (405).json({erro: 'Metodo informado não é valido'});
+        return res.status (400).json({erro: 'Usuario ou senha nao encontrado'});
       
-}      
+}  
+return res.status (405).json({erro: 'Metodo informado nao e valido'});
+
+}
 export default conectarMongoDb(endpointLogin);

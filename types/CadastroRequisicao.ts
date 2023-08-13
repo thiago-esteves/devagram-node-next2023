@@ -1,6 +1,6 @@
 export type CadastroRequisicao = {
-    nome : String,
-    email: String,
-    senha: String
+    nome : string,
+    email: string,
+    senha: string
 
 }
