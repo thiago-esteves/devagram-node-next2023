@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type {  NextApiResponse } from 'next';
 import type { RespostaPadraoMsg } from '../../types/RespostaPadraoMsg';
 import nc from 'next-connect';
 import { upload, uploadImagemCosmic } from '../../services/uploadImagemCosmic';
@@ -13,7 +13,7 @@ const handler = nc()
     .post(async (req: any, res: NextApiResponse<RespostaPadraoMsg>) => {
 
         try {
-            const { UserId } = req.query;
+            const {UserId } = req.query;
             const usuario = await UsuarioModel.findById(UserId);
             if (!usuario) {
                 return res.status(400).json({ erro: 'Usuario nao encontrado ' });
@@ -23,7 +23,7 @@ const handler = nc()
                 return res.status(400).json({ erro: 'Paramentros de entrada nao informados ' });
 
             }
-            const { descricao, file } = req?.body;
+            const {descricao} = req?.body;
 
             if (!descricao || descricao.length < 2) {
                 return res.status(400).json({ erro: 'Descricao nao é valida' })
