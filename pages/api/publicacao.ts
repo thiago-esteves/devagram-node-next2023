@@ -4,7 +4,7 @@ import nc from 'next-connect';
 import { upload, uploadImagemCosmic } from '../../services/uploadImagemCosmic';
 import { conectarMongoDb } from '../../middlewares/conectarMongoDB';
 import { validarTokenJWT } from '../../middlewares/validarTokenJWT';
-import { PUblicacaoModel } from '../../models/PublicacaoModel';
+import {PublicacaoModel } from '../../models/PublicacaoModel';
 import { UsuarioModel } from '../../models/UsuarioModel';
 
 
@@ -15,7 +15,7 @@ const handler = nc()
         try {
             const {UserId } = req.query;
             const usuario = await UsuarioModel.findById(UserId);
-            if (!usuario) {
+            if (usuario) {
                 return res.status(400).json({ erro: 'Usuario nao encontrado ' });
 
             }
@@ -39,7 +39,7 @@ const handler = nc()
                 foto: image.media.url,
                 data: new Date()
                        }
-            await PUblicacaoModel.create(publicacao);
+            await PublicacaoModel.create(publicacao);
             return res.status(200).json({ msg: 'Publicacao criada com sucesso' })
         } catch (e) {
             console.log(e);
