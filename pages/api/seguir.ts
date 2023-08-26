@@ -43,6 +43,8 @@ const endpointSeguir =
 
                     usuarioLogado.seguindo++;
                     await UsuarioModel.findByIdAndUpdate({_id: usuarioLogado._id}, usuarioLogado);
+                    usuarioASerSeguido.seguidores++;
+                    await UsuarioModel.findByIdAndUpdate({_id: usuarioASerSeguido._id}, usuarioASerSeguido);
 
 
                     return res.status(200).json({erro:'Usuario seguido com sucesso'});

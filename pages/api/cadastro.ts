@@ -6,10 +6,13 @@ import { conectarMongoDb } from "../../middlewares/conectarMongoDB";
 import md5 from "md5";
 import {upload,uploadImagemCosmic} from '../../services/uploadImagemCosmic';
 import nc from 'next-connect';
+import { politicaCORS } from "@/middlewares/politicaCORS";
 
 const handler = nc()
   .use(upload.single('file'))
   .post(async (req: NextApiRequest, res: NextApiResponse<RespostaPadraoMsg>)=>{
+
+    try{
     const usuario = req.body as CadastroRequisicao;
     
 
@@ -21,7 +24,7 @@ const handler = nc()
     || !usuario.email.includes('@')
     || !usuario.email.includes('.')) {
       return res.status(400).json({ erro: 'Email invalido' });
-
+    
     }
     if (!usuario.senha || usuario.senha.length < 4) {
       return res.status(400).json({ erro: 'Senha invalido' });
@@ -46,11 +49,14 @@ const handler = nc()
     await UsuarioModel.create(usuarioASerSalvo);
     return res.status(200).json({ msg: 'Usuario criado com sucesso' });
 
+}catch(e :any){
+  console.log(e);
+    return res.status(400).json({erro: e.toString() })
+}
 });
-
 export const config ={
   api:{ bodyParser: false
   }
 }
 
-export default conectarMongoDb(handler);
+export default politicaCORS(conectarMongoDb(handler)) ;
